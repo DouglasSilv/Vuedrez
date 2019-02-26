@@ -1,11 +1,12 @@
 <template>
     <div v-bind:class="getClass()" ref="quadrado" class="quadrado">
-        {{linha}}-{{coluna}}
+        <h1>{{linha}} - {{coluna}}</h1>
     </div>
 </template>
 
 <script>
-import PeaoBranco from './PeaoBranco.vue'
+import Peca from './Peca.vue'
+import pecas from '../assets/pecas.js'
 import Vue from 'vue'
 
 export default {
@@ -13,7 +14,11 @@ export default {
     props: {
         linha: Number,
         coluna: Number,
-        id: String
+        id: String,
+        adicionaPeca: Function
+    },
+    components: {
+        Peca
     },
     methods:{
         getClass(){
@@ -23,10 +28,19 @@ export default {
         }
     },
     mounted() {
-        var ComponentClass = Vue.extend(PeaoBranco)
-        var instance = new ComponentClass()
-        instance.$mount()
-        this.$refs.quadrado.appendChild(instance.$el)
+        pecas.forEach(peca => {
+            if(peca.linha === this.linha && peca.coluna === this.coluna){
+                var ComponentClass = Vue.extend(Peca)
+                var instance = new ComponentClass({
+                    propsData: { tipo: peca.tipo,
+                                 lado: peca.lado}
+                })
+                instance.$mount()
+                this.$refs.quadrado.appendChild(instance.$el)
+                console.log(this.$refs)
+                this.adicionaPeca(this.linha, this.coluna, peca.tipo)
+            }
+        });
     }
 }
 </script>
@@ -37,6 +51,7 @@ export default {
     height: 8vw;
     width: 8vw;
     display: inline-block;
+    position: relative;
 }
 
 .preto{
@@ -45,5 +60,9 @@ export default {
 
 .branco {
     background-color: white;
+}
+
+h1{
+    color: orange
 }
 </style>
