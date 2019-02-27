@@ -9,7 +9,8 @@ export default {
     name: 'Peca',
     props: {
         tipo: String,
-        lado: String
+        lado: String,
+        mostraOpcoes: Function
     },
     data: () => {
         return {
@@ -24,16 +25,7 @@ export default {
         },
         selecionarPeca(){
             this.selecionada = !this.selecionada;
-            switch(this.tipo) {
-                case 'Peao':
-                    mostraOpcoesPeao()
-                    break;
-                case 'Cavalo':
-                    // code block
-                    break;
-                default:
-                    // code block
-}
+            this.mostraOpcoes(this.tipo)
         },
         isSelecionada(){
             if(this.selecionada === true){

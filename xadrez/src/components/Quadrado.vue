@@ -15,7 +15,14 @@ export default {
         linha: Number,
         coluna: Number,
         id: String,
-        adicionaPeca: Function
+        adicionaPeca: Function,
+        adicionaQuadrado: Function,
+        mostraOpcoesPeao: Function
+    },
+    data: () => {
+        return {
+            disponivel: false
+        }
     },
     components: {
         Peca
@@ -25,6 +32,19 @@ export default {
             return {
                 'branco': (this.linha+this.coluna)%2 == 0,  
                 'preto': (this.linha+this.coluna)%2 != 0}
+        },
+        mostraOpcoes: function (tipo) {
+            console.log('passou')
+            switch(tipo) {
+                case 'Peao':
+                    mostraOpcoesPeao(this.linha, this.coluna)
+                    break;
+                case 'Cavalo':
+                    // code block
+                    break;
+                default:
+                    // code block
+            }
         }
     },
     mounted() {
@@ -33,14 +53,19 @@ export default {
                 var ComponentClass = Vue.extend(Peca)
                 var instance = new ComponentClass({
                     propsData: { tipo: peca.tipo,
-                                 lado: peca.lado}
+                                 lado: peca.lado,
+                                 mostraOpcoes: this.mostraOpcoes}
                 })
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)
                 console.log(this.$refs)
                 this.adicionaPeca(this.linha, this.coluna, peca.tipo)
+                this.adicionaQuadrado(this.linha, this.coluna, true)
+                this.disponivel = true
             }
         });
+        if(this.disponivel === false)
+            this.adicionaQuadrado(this.linha, this.coluna, false)
     }
 }
 </script>
@@ -62,7 +87,9 @@ export default {
     background-color: white;
 }
 
-h1{
-    color: orange
+.quadrado h1{
+    color: orange;
+    font-size: 4rem;
+    margin-top: 3rem;
 }
 </style>
