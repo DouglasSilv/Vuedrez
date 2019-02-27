@@ -34,10 +34,9 @@ export default {
                 'preto': (this.linha+this.coluna)%2 != 0}
         },
         mostraOpcoes: function (tipo) {
-            console.log('passou')
             switch(tipo) {
                 case 'Peao':
-                    mostraOpcoesPeao(this.linha, this.coluna)
+                    this.mostraOpcoesPeao(this.linha, this.coluna)
                     break;
                 case 'Cavalo':
                     // code block
@@ -58,14 +57,13 @@ export default {
                 })
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)
-                console.log(this.$refs)
                 this.adicionaPeca(this.linha, this.coluna, peca.tipo)
-                this.adicionaQuadrado(this.linha, this.coluna, true)
+                this.adicionaQuadrado(this.linha, this.coluna, true, this.$refs.quadrado)
                 this.disponivel = true
             }
         });
         if(this.disponivel === false)
-            this.adicionaQuadrado(this.linha, this.coluna, false)
+            this.adicionaQuadrado(this.linha, this.coluna, false, this.$refs.quadrado)
     }
 }
 </script>
