@@ -27,11 +27,19 @@ export default {
       adicionaPeca(linha, coluna, peca){
           this.pecas.push({linha, coluna, peca})
       },
-      adicionaQuadrado(linha, coluna, disponivel){
-          this.quadrados.push({linha, coluna, disponivel})
+      adicionaQuadrado(linha, coluna, disponivel, quadrado){
+          console.log(quadrado)
+          this.quadrados.push({linha, coluna, disponivel, quadrado})
       },
       mostraOpcoesPeao(linha, coluna){
-          console.log('passou')
+          const qntMovimentos = linha === 7 ? 2 : 1
+          var movimentos = []
+
+          for (let index = 1; index <= qntMovimentos; index++) {
+              movimentos.push({linha: linha-index , coluna})  
+          }
+          
+          
       }
   }
 }

@@ -25,7 +25,8 @@ export default {
         },
         selecionarPeca(){
             this.selecionada = !this.selecionada;
-            this.mostraOpcoes(this.tipo)
+            if(this.selecionada===true)
+                this.mostraOpcoes(this.tipo)
         },
         isSelecionada(){
             if(this.selecionada === true){
