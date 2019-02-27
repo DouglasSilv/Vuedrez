@@ -1,5 +1,5 @@
 <template>
-    <div v-bind:class="getClass()" ref="quadrado" class="quadrado">
+    <div v-bind:class="getClass()" v-on:click="moverPeca" ref="quadrado" class="quadrado">
     </div>
 </template>
 
@@ -16,11 +16,15 @@ export default {
         id: String,
         adicionaPeca: Function,
         adicionaQuadrado: Function,
-        mostraOpcoesPeao: Function
+        mostraOpcoesPeao: Function,
+        limparQuadrados: Function,
+        movimentos: Array,
+        peca: Object
     },
     data: () => {
         return {
-            disponivel: false
+            disponivel: false,
+            pecaQuadrado: {}
         }
     },
     components: {
@@ -28,20 +32,32 @@ export default {
     },
     methods:{
         getClass(){
-            return {
-                'branco': (this.linha+this.coluna)%2 == 0,  
-                'preto': (this.linha+this.coluna)%2 != 0}
+            var classe = (this.linha+this.coluna)%2 == 0 ? 'branco' : 'preto' 
+            classe+= this.movimentos.includes(this.id) ? ' selecionado' : ''
+            return classe
         },
         mostraOpcoes: function (tipo) {
             switch(tipo) {
                 case 'Peao':
-                    this.mostraOpcoesPeao(this.linha, this.coluna)
+                    this.mostraOpcoesPeao(this.pecaQuadrado, this.linha, this.coluna)
                     break;
                 case 'Cavalo':
                     // code block
                     break;
                 default:
                     // code block
+            }
+        },
+        moverPeca(){
+            if(this.movimentos.includes(this.id)){
+                var ComponentClass = Vue.extend(Peca)
+                var instance = new ComponentClass({
+                    propsData: { tipo: this.peca.tipo,
+                                 lado: this.peca.lado,
+                                 mostraOpcoes: this.mostraOpcoes}
+                })
+                instance.$mount()
+                this.$refs.quadrado.appendChild(instance.$el)
             }
         }
     },
@@ -57,12 +73,13 @@ export default {
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)
                 this.adicionaPeca(this.linha, this.coluna, peca.tipo)
-                this.adicionaQuadrado(this.linha, this.coluna, true, this.$refs.quadrado)
+                this.adicionaQuadrado(this.id, this.linha, this.coluna, true, this.$refs.quadrado)
                 this.disponivel = true
+                this.pecaQuadrado = peca
             }
         });
         if(this.disponivel === false)
-            this.adicionaQuadrado(this.linha, this.coluna, false, this.$refs.quadrado)
+            this.adicionaQuadrado(this.id, this.linha, this.coluna, false, this.$refs.quadrado)
     }
 }
 </script>
@@ -88,6 +105,11 @@ export default {
     color: orange;
     font-size: 4rem;
     margin-top: 3rem;
+}
+
+.selecionado {
+    background-color: blue;
+    cursor: pointer;
 }
 
 @media (max-width: 768px) {
