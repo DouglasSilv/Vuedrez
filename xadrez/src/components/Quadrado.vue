@@ -73,8 +73,8 @@ export default {
 
 <style scoped>
 .quadrado {
-    height: 8vw;
-    width: 8vw;
+    height: 10vh;
+    width: 10vh;
     display: inline-block;
     position: relative;
 }

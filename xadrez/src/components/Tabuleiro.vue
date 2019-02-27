@@ -45,11 +45,10 @@ export default {
 }
 
 .linha {
-    height: 8vw;
+    height: 10vh;
 }
 
 .container{
-    height: 100vh;
     text-align: center;
     margin-top: 5rem;
 }
