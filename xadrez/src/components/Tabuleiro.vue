@@ -60,6 +60,12 @@ export default {
     text-align: center;
     margin-top: 5rem;
 }
+
+@media (max-width: 768px) {
+    .linha {
+        height: 8vw;
+    }
+}
 </style>
 
 

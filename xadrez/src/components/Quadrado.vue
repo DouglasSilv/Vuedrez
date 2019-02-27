@@ -1,6 +1,5 @@
 <template>
     <div v-bind:class="getClass()" ref="quadrado" class="quadrado">
-        <h1>{{linha}} - {{coluna}}</h1>
     </div>
 </template>
 
@@ -89,5 +88,12 @@ export default {
     color: orange;
     font-size: 4rem;
     margin-top: 3rem;
+}
+
+@media (max-width: 768px) {
+    .quadrado {
+        height: 8vw;
+        width: 8vw;
+    }
 }
 </style>
