@@ -1,5 +1,5 @@
 <template>
-    <img v-on:click="selecionarPeca" v-click-outside="deselecionarPeca" v-bind:class="isSelecionada()" class="peca" :src="getImage()" alt="Kiwi standing on oval">
+    <img v-on:click="selecionarPeca" v-click-outside="deselecionarPeca" v-bind:class="isSelecionada()" class="peca" :src="getImage()">
 </template>
 
 <script>
@@ -11,20 +11,21 @@ export default {
         tipo: String,
         lado: String,
         mostraOpcoes: Function,
-        limparQuadrados: Function
+        limparQuadrados: Function,
+        isPecaSelecionada: Function
+
     },
     data: () => {
         return {
             selecionada: false
         }
     },
-    created() {
-    },
     methods:{
         getImage(){
             return require(`../assets/pecas/${this.tipo+this.lado}.png`)
         },
         selecionarPeca(){
+            if(this.isPecaSelecionada(this.lado)) return
             this.selecionada = !this.selecionada;
             if(this.selecionada===true)
                 this.mostraOpcoes(this.tipo)

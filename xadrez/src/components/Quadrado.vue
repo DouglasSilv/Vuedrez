@@ -17,13 +17,15 @@ export default {
         adicionaPeca: Function,
         adicionaQuadrado: Function,
         mostraOpcoesPeao: Function,
-        limparQuadrados: Function,
+        removePecaAtual: Function,
+        eliminaPeca: Function,
+        isPecaSelecionada: Function,
         movimentos: Array,
-        peca: Object
+        pecaSelecionada: Object
     },
     data: () => {
         return {
-            disponivel: false,
+            ocupado: false,
             pecaQuadrado: {}
         }
     },
@@ -49,15 +51,27 @@ export default {
             }
         },
         moverPeca(){
+            if(Object.entries(this.pecaSelecionada).length === 0 && this.pecaSelecionada.constructor === Object) return
             if(this.movimentos.includes(this.id)){
+                this.removePecaAtual()
+                if(this.ocupado)
+                    this.eliminaPeca(this.coluna, this.linha)
                 var ComponentClass = Vue.extend(Peca)
+                let tipo = this.pecaSelecionada.tipo
+                let lado = this.pecaSelecionada.lado
                 var instance = new ComponentClass({
-                    propsData: { tipo: this.peca.tipo,
-                                 lado: this.peca.lado,
-                                 mostraOpcoes: this.mostraOpcoes}
+                    propsData: { tipo: tipo,
+                                 lado: lado,
+                                 mostraOpcoes: this.mostraOpcoes,
+                                 isPecaSelecionada: this.isPecaSelecionada}
                 })
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)
+                this.pecaQuadrado = {tipo: this.pecaSelecionada.tipo,
+                                     lado: this.pecaSelecionada.lado,
+                                     linha: this.linha,
+                                     coluna: this.coluna}
+                this.ocupado = true
             }
         }
     },
@@ -68,17 +82,18 @@ export default {
                 var instance = new ComponentClass({
                     propsData: { tipo: peca.tipo,
                                  lado: peca.lado,
-                                 mostraOpcoes: this.mostraOpcoes}
+                                 mostraOpcoes: this.mostraOpcoes,
+                                 isPecaSelecionada: this.isPecaSelecionada}
                 })
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)
                 this.adicionaPeca(this.linha, this.coluna, peca.tipo)
                 this.adicionaQuadrado(this.id, this.linha, this.coluna, true, this.$refs.quadrado)
-                this.disponivel = true
+                this.ocupado = true
                 this.pecaQuadrado = peca
             }
         });
-        if(this.disponivel === false)
+        if(this.ocupado === false)
             this.adicionaQuadrado(this.id, this.linha, this.coluna, false, this.$refs.quadrado)
     }
 }
@@ -91,6 +106,7 @@ export default {
     width: 10vh;
     display: inline-block;
     position: relative;
+    transition: all .3s;
 }
 
 .preto{
@@ -105,6 +121,7 @@ export default {
     color: orange;
     font-size: 4rem;
     margin-top: 3rem;
+    position: absolute;
 }
 
 .selecionado {
