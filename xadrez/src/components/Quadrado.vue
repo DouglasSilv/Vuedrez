@@ -19,6 +19,7 @@ export default {
         mostraOpcoesPeao: Function,
         removePecaAtual: Function,
         eliminaPeca: Function,
+        mostraOpcoesCavalo: Function,
         isPecaSelecionada: Function,
         movimentos: Array,
         pecaSelecionada: Object
@@ -44,7 +45,7 @@ export default {
                     this.mostraOpcoesPeao(this.pecaQuadrado, this.linha, this.coluna)
                     break;
                 case 'Cavalo':
-                    // code block
+                    this.mostraOpcoesCavalo(this.pecaQuadrado, this.linha, this.coluna)
                     break;
                 default:
                     // code block

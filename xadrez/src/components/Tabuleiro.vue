@@ -5,6 +5,7 @@
                 <Quadrado 
                     :movimentos="movimentos" 
                     :mostraOpcoesPeao="mostraOpcoesPeao" 
+                    :mostraOpcoesCavalo="mostraOpcoesCavalo"
                     :adicionaPeca="adicionaPeca" 
                     :adicionaQuadrado="adicionaQuadrado"
                     :removePecaAtual="removePecaAtual"
@@ -66,17 +67,49 @@ export default {
                     movimentos.push({id: ''+coluna+(linha-mov)})  
                 }
   
-                if(this.isOcupadoEValido(coluna+(1*aux), linha-(1*aux), peca.lado))
+                if(this.isOcupadoEValidoPeao(coluna+(1*aux), linha-(1*aux), peca.lado))
                     movimentos.push({id: String(coluna+(1*aux))+String(linha-(1*aux))})
                 
-                if(this.isOcupadoEValido(coluna-(1*aux), linha-(1*aux), peca.lado))
+                if(this.isOcupadoEValidoPeao(coluna-(1*aux), linha-(1*aux), peca.lado))
                     movimentos.push({id: String(coluna-(1*aux))+String(linha-(1*aux))})
   
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
             }, 1);
         },
-        isOcupadoEValido(coluna, linha, lado){
+        mostraOpcoesCavalo(peca, linha, coluna){
+            setTimeout(() => {
+                var movimentos = []
+
+                if(this.isValidoCavalo(coluna+1, linha-2, peca.lado))
+                    movimentos.push({id: String(coluna+1)+String(linha-2)})
+                
+                if(this.isValidoCavalo(coluna-1, linha-2, peca.lado))
+                    movimentos.push({id: String(coluna-1)+String(linha-2)})
+
+                if(this.isValidoCavalo(coluna+1, linha+2, peca.lado))
+                    movimentos.push({id: String(coluna+1)+String(linha+2)})
+
+                if(this.isValidoCavalo(coluna-1, linha+2, peca.lado))    
+                    movimentos.push({id: String(coluna-1)+String(linha+2)})
+                
+                if(this.isValidoCavalo(coluna-2, linha+1, peca.lado))    
+                    movimentos.push({id: String(coluna-2)+String(linha+1)})
+
+                if(this.isValidoCavalo(coluna-2, linha-1, peca.lado))    
+                    movimentos.push({id: String(coluna-2)+String(linha-1)})
+
+                if(this.isValidoCavalo(coluna+2, linha+1, peca.lado))    
+                    movimentos.push({id: String(coluna+2)+String(linha+1)})
+
+                if(this.isValidoCavalo(coluna+2, linha-1, peca.lado))    
+                    movimentos.push({id: String(coluna+2)+String(linha-1)})
+
+                this.getQuadrados(movimentos)
+                this.pecaSelecionada = peca
+            }, 1);
+        },
+        isOcupadoEValidoPeao(coluna, linha, lado){
             var adversario = ''
             if (lado === 'Branco'){
                 adversario = 'Preto'
@@ -89,6 +122,10 @@ export default {
                && this.getQuadrado(coluna, linha).quadrado.__vue__.pecaQuadrado.lado === adversario)
                 return true
             return false
+        },
+        isValidoCavalo(coluna, linha, lado){
+            if(this.getQuadrado(coluna, linha) && this.getQuadrado(coluna, linha).quadrado.__vue__.pecaQuadrado.lado != lado)
+                return true
         },
         getQuadrados(movimentos) {
             this.movimentos = []
