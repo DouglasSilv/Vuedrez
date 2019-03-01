@@ -21,6 +21,8 @@ export default {
         removePecaAtual: Function,
         eliminaPeca: Function,
         mostraOpcoesCavalo: Function,
+        mostraOpcoesTorre: Function,
+        mostraOpcoesRainha: Function,
         isPecaSelecionada: Function,
         movimentos: Array,
         pecaSelecionada: Object
@@ -51,6 +53,11 @@ export default {
                 case 'Bispo':
                     this.mostraOpcoesBispo(this.pecaQuadrado, this.linha, this.coluna)
                     break;
+                case 'Torre':
+                    this.mostraOpcoesTorre(this.pecaQuadrado, this.linha, this.coluna)
+                    break;
+                case 'Rainha':
+                    this.mostraOpcoesRainha(this.pecaQuadrado, this.linha, this.coluna)
                 default:
                     // code block
             }
