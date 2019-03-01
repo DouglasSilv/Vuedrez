@@ -1,5 +1,6 @@
 <template>
-    <div class="container">    
+    <div class="container"> 
+        <h1>Lado atual: {{ladoAtual}}</h1>  
         <div class="tabuleiro" v-click-outside="limparQuadrados" v-on:click="limparQuadrados" >
             <div v-for="linha in linhas" v-bind:key="linha" class="linha">
                 <Quadrado 
@@ -9,13 +10,16 @@
                     :mostraOpcoesBispo="mostraOpcoesBispo"
                     :mostraOpcoesTorre="mostraOpcoesTorre"
                     :mostraOpcoesRainha="mostraOpcoesRainha"
+                    :mostraOpcoesRei="mostraOpcoesRei"
                     :adicionaPeca="adicionaPeca" 
                     :adicionaQuadrado="adicionaQuadrado"
                     :removePecaAtual="removePecaAtual"
                     :isPecaSelecionada="isPecaSelecionada"
                     :eliminaPeca="eliminaPeca"
+                    :mudarLado="mudarLado"
                     :linha="linha"
                     :coluna="coluna"
+                    :isLadoAtual="isLadoAtual"
                     :pecaSelecionada="pecaSelecionada"
                     :id="''+coluna+linha" 
                     v-for="coluna in colunas" 
@@ -36,12 +40,13 @@ export default {
     },
     data: () => {
         return {
-          linhas: [1, 2, 3, 4, 5, 6, 7, 8],
-          colunas: [1, 2, 3, 4, 5, 6, 7, 8],
-          pecas: [],
-          quadrados: new Map(),
-          movimentos: [],
-          pecaSelecionada: {}
+            linhas: [1, 2, 3, 4, 5, 6, 7, 8],
+            colunas: [1, 2, 3, 4, 5, 6, 7, 8],
+            pecas: [],
+            quadrados: new Map(),
+            movimentos: [],
+            pecaSelecionada: {},
+            ladoAtual: 'Branco'
         };
     },
     methods: {
@@ -78,7 +83,7 @@ export default {
   
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
-            }, 1);
+            }, 1)
         },
         mostraOpcoesCavalo(peca, linha, coluna){
             setTimeout(() => {
@@ -110,7 +115,7 @@ export default {
 
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
-            }, 1);
+            }, 1)
         },
         mostraOpcoesBispo(peca, linha, coluna) {
             setTimeout(() => {
@@ -123,7 +128,7 @@ export default {
 
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
-            }, 1 );
+            }, 1 )
         },
         mostraOpcoesTorre(peca, linha, coluna){
             setTimeout(() => {
@@ -136,7 +141,7 @@ export default {
                 
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
-            }, 1);
+            }, 1)
         },
         mostraOpcoesRainha(peca, linha, coluna){
             setTimeout(() => {
@@ -150,10 +155,26 @@ export default {
                 movimentos = this.percorreDiagonal('+', '+', movimentos, coluna, linha, peca.lado)
                 movimentos = this.percorreDiagonal('-', '-', movimentos, coluna, linha, peca.lado)
                 movimentos = this.percorreDiagonal('-', '+', movimentos, coluna, linha, peca.lado)
-                
+
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
-            }, 1);
+            }, 1)
+        },
+        mostraOpcoesRei(peca, linha, coluna){
+            setTimeout(() => {
+                var movimentos = []
+
+                for (let i = -1; i <= 1; i++) {
+                    for (let j = -1; j <= 1; j++) {
+                        if(this.isValido(coluna+i, linha+j, peca.lado))
+                            movimentos.push({id: String(coluna+i)+String(linha+j)})
+                    }
+                    
+                }
+
+                this.getQuadrados(movimentos)
+                this.pecaSelecionada = peca
+            }, 1)
         },
         percorreDiagonal(sinal1, sinal2, movimentos, coluna, linha, lado){
             sinal1 = this.getSinal(sinal1)
@@ -245,6 +266,12 @@ export default {
         },
         isPecaSelecionada(lado){
             return ((this.pecaSelecionada.hasOwnProperty('lado')) && lado != this.pecaSelecionada.lado)
+        },
+        mudarLado(){
+            this.ladoAtual = this.getAdversario(this.ladoAtual)
+        },
+        isLadoAtual(lado){
+            return this.ladoAtual === lado ? false : true
         }
       },
       directives: {

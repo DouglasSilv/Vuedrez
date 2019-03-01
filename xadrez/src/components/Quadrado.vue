@@ -14,6 +14,7 @@ export default {
         linha: Number,
         coluna: Number,
         id: String,
+        isLadoAtual: Function,
         adicionaPeca: Function,
         adicionaQuadrado: Function,
         mostraOpcoesPeao: Function,
@@ -23,7 +24,9 @@ export default {
         mostraOpcoesCavalo: Function,
         mostraOpcoesTorre: Function,
         mostraOpcoesRainha: Function,
+        mostraOpcoesRei: Function,
         isPecaSelecionada: Function,
+        mudarLado: Function,
         movimentos: Array,
         pecaSelecionada: Object
     },
@@ -58,8 +61,10 @@ export default {
                     break;
                 case 'Rainha':
                     this.mostraOpcoesRainha(this.pecaQuadrado, this.linha, this.coluna)
-                default:
-                    // code block
+                    break;
+                case 'Rei':
+                    this.mostraOpcoesRei(this.pecaQuadrado, this.linha, this.coluna)
+                    break;
             }
         },
         moverPeca(){
@@ -75,7 +80,8 @@ export default {
                     propsData: { tipo: tipo,
                                  lado: lado,
                                  mostraOpcoes: this.mostraOpcoes,
-                                 isPecaSelecionada: this.isPecaSelecionada}
+                                 isPecaSelecionada: this.isPecaSelecionada,
+                                 isLadoAtual: this.isLadoAtual}
                 })
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)
@@ -84,6 +90,7 @@ export default {
                                      linha: this.linha,
                                      coluna: this.coluna}
                 this.ocupado = true
+                this.mudarLado()
             }
         }
     },
@@ -95,7 +102,8 @@ export default {
                     propsData: { tipo: peca.tipo,
                                  lado: peca.lado,
                                  mostraOpcoes: this.mostraOpcoes,
-                                 isPecaSelecionada: this.isPecaSelecionada}
+                                 isPecaSelecionada: this.isPecaSelecionada,
+                                 isLadoAtual: this.isLadoAtual}
                 })
                 instance.$mount()
                 this.$refs.quadrado.appendChild(instance.$el)

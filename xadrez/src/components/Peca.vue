@@ -10,9 +10,11 @@ export default {
     props: {
         tipo: String,
         lado: String,
+        ladoAtual: String,
         mostraOpcoes: Function,
         limparQuadrados: Function,
-        isPecaSelecionada: Function
+        isPecaSelecionada: Function,
+        isLadoAtual: Function
 
     },
     data: () => {
@@ -25,7 +27,7 @@ export default {
             return require(`../assets/pecas/${this.tipo+this.lado}.png`)
         },
         selecionarPeca(){
-            if(this.isPecaSelecionada(this.lado)) return
+            if(this.isPecaSelecionada(this.lado) || this.isLadoAtual(this.lado)) return
             this.selecionada = !this.selecionada;
             if(this.selecionada===true)
                 this.mostraOpcoes(this.tipo)
