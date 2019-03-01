@@ -17,6 +17,7 @@ export default {
         adicionaPeca: Function,
         adicionaQuadrado: Function,
         mostraOpcoesPeao: Function,
+        mostraOpcoesBispo: Function,
         removePecaAtual: Function,
         eliminaPeca: Function,
         mostraOpcoesCavalo: Function,
@@ -46,6 +47,9 @@ export default {
                     break;
                 case 'Cavalo':
                     this.mostraOpcoesCavalo(this.pecaQuadrado, this.linha, this.coluna)
+                    break;
+                case 'Bispo':
+                    this.mostraOpcoesBispo(this.pecaQuadrado, this.linha, this.coluna)
                     break;
                 default:
                     // code block

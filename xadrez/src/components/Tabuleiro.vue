@@ -6,6 +6,7 @@
                     :movimentos="movimentos" 
                     :mostraOpcoesPeao="mostraOpcoesPeao" 
                     :mostraOpcoesCavalo="mostraOpcoesCavalo"
+                    :mostraOpcoesBispo="mostraOpcoesBispo"
                     :adicionaPeca="adicionaPeca" 
                     :adicionaQuadrado="adicionaQuadrado"
                     :removePecaAtual="removePecaAtual"
@@ -81,33 +82,70 @@ export default {
             setTimeout(() => {
                 var movimentos = []
 
-                if(this.isValidoCavalo(coluna+1, linha-2, peca.lado))
+                if(this.isValido(coluna+1, linha-2, peca.lado))
                     movimentos.push({id: String(coluna+1)+String(linha-2)})
                 
-                if(this.isValidoCavalo(coluna-1, linha-2, peca.lado))
+                if(this.isValido(coluna-1, linha-2, peca.lado))
                     movimentos.push({id: String(coluna-1)+String(linha-2)})
 
-                if(this.isValidoCavalo(coluna+1, linha+2, peca.lado))
+                if(this.isValido(coluna+1, linha+2, peca.lado))
                     movimentos.push({id: String(coluna+1)+String(linha+2)})
 
-                if(this.isValidoCavalo(coluna-1, linha+2, peca.lado))    
+                if(this.isValido(coluna-1, linha+2, peca.lado))    
                     movimentos.push({id: String(coluna-1)+String(linha+2)})
                 
-                if(this.isValidoCavalo(coluna-2, linha+1, peca.lado))    
+                if(this.isValido(coluna-2, linha+1, peca.lado))    
                     movimentos.push({id: String(coluna-2)+String(linha+1)})
 
-                if(this.isValidoCavalo(coluna-2, linha-1, peca.lado))    
+                if(this.isValido(coluna-2, linha-1, peca.lado))    
                     movimentos.push({id: String(coluna-2)+String(linha-1)})
 
-                if(this.isValidoCavalo(coluna+2, linha+1, peca.lado))    
+                if(this.isValido(coluna+2, linha+1, peca.lado))    
                     movimentos.push({id: String(coluna+2)+String(linha+1)})
 
-                if(this.isValidoCavalo(coluna+2, linha-1, peca.lado))    
+                if(this.isValido(coluna+2, linha-1, peca.lado))    
                     movimentos.push({id: String(coluna+2)+String(linha-1)})
 
                 this.getQuadrados(movimentos)
                 this.pecaSelecionada = peca
             }, 1);
+        },
+        mostraOpcoesBispo(peca, linha, coluna) {
+            setTimeout(() => {
+                var movimentos = []
+                /*for (let i = 1; true; i++) {
+                    if(!this.isValido(coluna+i, linha+i, peca.lado))
+                        break
+                    movimentos.push({id: String(coluna+i)+String(linha+i)})
+                }*/
+                movimentos = this.percorreDiagonal('+', '-', movimentos, coluna, linha, peca.lado)
+                movimentos = this.percorreDiagonal('+', '+', movimentos, coluna, linha, peca.lado)
+                movimentos = this.percorreDiagonal('-', '-', movimentos, coluna, linha, peca.lado)
+                movimentos = this.percorreDiagonal('-', '+', movimentos, coluna, linha, peca.lado)
+                this.getQuadrados(movimentos)
+                this.pecaSelecionada = peca
+            }, 1 );
+        },
+        percorreDiagonal(sinal1, sinal2, movimentos, coluna, linha, lado){
+            sinal1 = this.getSinal(sinal1)
+            sinal2 = this.getSinal(sinal2)
+            for (let i = 1; true; i++) {
+                if(!this.isValido(coluna+(i*sinal1), linha+(i*sinal2), lado)) break
+
+                movimentos.push({id: String(coluna+(i*sinal1))+String(linha+(i*sinal2))})
+                
+                if (this.getQuadrado((coluna+(i*sinal1))+(0*sinal1), (linha+(i*sinal2))+0*sinal2) 
+                && this.getQuadrado((coluna+(i*sinal1))+(0*sinal1), (linha+(i*sinal2))+0*sinal2).quadrado.__vue__.pecaQuadrado.lado == 'Preto') break
+            }
+
+            return movimentos
+        },
+        getSinal(sinal){
+            if(sinal === '+'){
+                return 1
+            } else{
+                return -1
+            }
         },
         isOcupadoEValidoPeao(coluna, linha, lado){
             var adversario = ''
@@ -123,7 +161,7 @@ export default {
                 return true
             return false
         },
-        isValidoCavalo(coluna, linha, lado){
+        isValido(coluna, linha, lado){
             if(this.getQuadrado(coluna, linha) && this.getQuadrado(coluna, linha).quadrado.__vue__.pecaQuadrado.lado != lado)
                 return true
         },
