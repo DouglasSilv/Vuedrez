@@ -15,6 +15,7 @@
                     :adicionaQuadrado="adicionaQuadrado"
                     :removePecaAtual="removePecaAtual"
                     :isPecaSelecionada="isPecaSelecionada"
+                    :openModal="openModal"
                     :eliminaPeca="eliminaPeca"
                     :mudarLado="mudarLado"
                     :linha="linha"
@@ -27,16 +28,23 @@
                 />
             </div>
         </div>
+         <Modal v-if="showModal" 
+                @close="showModal=false"
+                :linha="linhaModal"
+                :coluna="colunaModal"
+                :lado="ladoModal"
+                :evoluirPeca="evoluirPeca"/>
     </div>
 </template>
 <script>
 import Quadrado from './Quadrado.vue'
 import ClickOutside from 'vue-click-outside'
+import Modal from './Modal.vue'
 
 export default {
     name: "Tabuleiro",
     components: {
-        Quadrado
+        Quadrado, Modal
     },
     data: () => {
         return {
@@ -46,7 +54,11 @@ export default {
             quadrados: new Map(),
             movimentos: [],
             pecaSelecionada: {},
-            ladoAtual: 'Branco'
+            ladoAtual: 'Branco',
+            showModal: false,
+            linhaModal: '',
+            colunaModal: '',
+            ladoModal: ''
         };
     },
     methods: {
@@ -272,6 +284,17 @@ export default {
         },
         isLadoAtual(lado){
             return this.ladoAtual === lado ? false : true
+        },
+        openModal(coluna, linha, lado){
+            this.showModal = true;
+            this.colunaModal = coluna;
+            this.linhaModal = linha;
+            this.ladoModal = lado
+        },
+        evoluirPeca(peca, coluna, linha){
+            this.showModal = false
+            this.getQuadrado(coluna, linha).quadrado.__vue__.pecaQuadrado.tipo = peca
+            this.getQuadrado(coluna, linha).quadrado.firstChild.__vue__.tipo = peca
         }
       },
       directives: {
