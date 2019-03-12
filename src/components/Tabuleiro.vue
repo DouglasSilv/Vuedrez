@@ -1,39 +1,44 @@
 <template>
-    <div class="container"> 
-        <h1>Lado atual: {{ladoAtual}}</h1>  
-        <div class="tabuleiro" v-click-outside="limparQuadrados" v-on:click="limparQuadrados" >
-            <div v-for="linha in linhas" v-bind:key="linha" class="linha">
-                <Quadrado 
-                    :movimentos="movimentos" 
-                    :mostraOpcoesPeao="mostraOpcoesPeao" 
-                    :mostraOpcoesCavalo="mostraOpcoesCavalo"
-                    :mostraOpcoesBispo="mostraOpcoesBispo"
-                    :mostraOpcoesTorre="mostraOpcoesTorre"
-                    :mostraOpcoesRainha="mostraOpcoesRainha"
-                    :mostraOpcoesRei="mostraOpcoesRei"
-                    :adicionaPeca="adicionaPeca" 
-                    :adicionaQuadrado="adicionaQuadrado"
-                    :removePecaAtual="removePecaAtual"
-                    :isPecaSelecionada="isPecaSelecionada"
-                    :openModal="openModal"
-                    :eliminaPeca="eliminaPeca"
-                    :mudarLado="mudarLado"
-                    :linha="linha"
-                    :coluna="coluna"
-                    :isLadoAtual="isLadoAtual"
-                    :pecaSelecionada="pecaSelecionada"
-                    :id="''+coluna+linha" 
-                    v-for="coluna in colunas" 
-                    v-bind:key="coluna"
-                />
-            </div>
+    <div>
+        <div class="pecas-mortas-pretas" > 
+            <div v-for="peca in pecasMortasPretas" v-bind:key="peca.coluna + peca.linha+''"> <img class="peca" :src="getImage(peca)" alt=""> </div>
         </div>
-         <Modal v-if="showModal" 
-                @close="showModal=false"
-                :linha="linhaModal"
-                :coluna="colunaModal"
-                :lado="ladoModal"
-                :evoluirPeca="evoluirPeca"/>
+        <div class="container"> 
+            <h1>Lado atual: <span>{{ladoAtual}}</span></h1>  
+            <div class="tabuleiro" v-click-outside="limparQuadrados" v-on:click="limparQuadrados" >
+                <div v-for="linha in linhas" v-bind:key="linha" class="linha">
+                    <Quadrado 
+                        :movimentos="movimentos" 
+                        :mostraOpcoesPeao="mostraOpcoesPeao" 
+                        :mostraOpcoesCavalo="mostraOpcoesCavalo"
+                        :mostraOpcoesBispo="mostraOpcoesBispo"
+                        :mostraOpcoesTorre="mostraOpcoesTorre"
+                        :mostraOpcoesRainha="mostraOpcoesRainha"
+                        :mostraOpcoesRei="mostraOpcoesRei"
+                        :adicionaPeca="adicionaPeca" 
+                        :adicionaQuadrado="adicionaQuadrado"
+                        :removePecaAtual="removePecaAtual"
+                        :isPecaSelecionada="isPecaSelecionada"
+                        :openModal="openModal"
+                        :eliminaPeca="eliminaPeca"
+                        :mudarLado="mudarLado"
+                        :linha="linha"
+                        :coluna="coluna"
+                        :isLadoAtual="isLadoAtual"
+                        :pecaSelecionada="pecaSelecionada"
+                        :id="''+coluna+linha" 
+                        v-for="coluna in colunas" 
+                        v-bind:key="coluna"
+                    />
+                </div>
+            </div>
+             <Modal v-if="showModal" 
+                    @close="showModal=false"
+                    :linha="linhaModal"
+                    :coluna="colunaModal"
+                    :lado="ladoModal"
+                    :evoluirPeca="evoluirPeca"/>
+        </div>
     </div>
 </template>
 <script>
@@ -58,10 +63,14 @@ export default {
             showModal: false,
             linhaModal: '',
             colunaModal: '',
-            ladoModal: ''
+            ladoModal: '',
+            pecasMortasPretas: new Array()
         };
     },
     methods: {
+        getImage(peca){
+            return require(`../assets/pecas/${peca.tipo+peca.lado}.png`)
+        },
         getQuadrado(coluna, linha){
             coluna = String(coluna)
             linha = String(linha)
@@ -274,6 +283,10 @@ export default {
             this.getQuadrado(this.pecaSelecionada.coluna, this.pecaSelecionada.linha).quadrado.__vue__.pecaQuadrado = {}
         },
         eliminaPeca(coluna, linha){
+            if(this.getQuadrado(coluna, linha).quadrado.__vue__.pecaQuadrado.lado === 'Preto'){
+                this.pecasMortasPretas.push(this.getQuadrado(coluna, linha).quadrado.__vue__.pecaQuadrado)
+                console.log('morreu');
+            }
             this.getQuadrado(coluna, linha).quadrado.firstChild.remove() 
         },
         isPecaSelecionada(lado){
@@ -319,10 +332,34 @@ export default {
     margin-top: 5rem;
 }
 
+.container h1{
+    font-family: 'Viga', sans-serif;
+}
+
+h1 span{
+    color: #42b983;
+}
+
 @media (max-width: 768px) {
     .linha {
         height: 8vw;
     }
+}
+
+.pecas-mortas-pretas{
+    top: 8rem;
+    left: 4rem;
+    position: absolute;
+    max-height: 100rem;
+    width: 16rem;
+    list-style: none;
+    background-color: blue;
+    display: -webkit-inline-box;
+}
+
+.peca{
+    height: 5rem;
+    width: auto;
 }
 </style>
 
